@@ -95,24 +95,6 @@ LFX-RISCV-Parameter-Extraction/
 
 ---
 
-## 🌟 Why This Matters for LFX Application
-
-### **Demonstrates:**
-1. ✅ **Technical Competence** - Successfully tested 3 LLMs
-2. ✅ **Research Skills** - Designed experiment, collected data, analyzed results
-3. ✅ **Domain Knowledge** - Deep understanding of RISC-V ISA structure
-4. ✅ **Quantitative Analysis** - Calculated precision, recall, F1 scores
-5. ✅ **Documentation** - Comprehensive reports and analysis
-
-### **Proves:**
-- ✅ Understanding of parameter classification (Named/Unnamed/Config-Dependent)
-- ✅ Ability to work with RISC-V specifications
-- ✅ Prompt engineering skills for LLMs
-- ✅ Data validation and quality assurance
-- ✅ Ready to contribute to mentorship project
-
----
-
 ## 💡 Key Insights
 
 ### **What Works:**
@@ -137,33 +119,6 @@ LFX-RISCV-Parameter-Extraction/
 
 ---
 
-## 🚀 Next Steps for LFX Project
-
-### **Phase 1: Expand Testing** (Weeks 1-2)
-- [ ] Test on misa register
-- [ ] Test on mtvec register
-- [ ] Test on mie/mip registers
-- [ ] Validate against UDB for each
-
-### **Phase 2: Prompt Refinement** (Weeks 3-4)
-- [ ] Incorporate findings from Phase 1
-- [ ] Add more few-shot examples
-- [ ] Refine unnamed parameter instructions
-- [ ] Test prompt v2 on all registers
-
-### **Phase 3: Automation** (Weeks 5-8)
-- [ ] Build validation pipeline
-- [ ] Create PR tagging workflow
-- [ ] Develop discrepancy reporting
-- [ ] Test on full Privileged Spec chapter
-
-### **Phase 4: Documentation** (Weeks 9-12)
-- [ ] Write methodology paper
-- [ ] Create usage guidelines
-- [ ] Submit findings to community
-- [ ] Prepare final mentorship report
-
----
 
 ## 📝 How to Use This PoC
 
