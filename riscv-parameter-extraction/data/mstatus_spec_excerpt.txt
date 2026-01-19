@@ -1,0 +1,214 @@
+# mstatus Register - Machine Status (from RISC-V Privileged Spec v1.13)
+
+## 3.1.6. Machine Status (mstatus and mstatush) Registers
+
+The mstatus register is an MXLEN-bit read/write register formatted as shown in Figure 7 for RV32 and Figure 8 for RV64. The mstatus register keeps track of and controls the hart's current operating state. A restricted view of mstatus appears as the sstatus register in the S-level ISA.
+
+### RV32 Bit Layout (Figure 7)
+
+```
+31 30 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+SD WPRI SDT SPELP TSR TW TVM MXR SUM MPRV XS[1:0] FS[1:0] MPP[1:0] VS[1:0] SPP MPIE UBE SPIE WPRI MIE WPRI SIE WPRI
+```
+
+### RV64 Bit Layout (Figure 8)
+
+```
+63 62 48 47 43 42 41 40 39 38 37 36 35 34 33 32
+SD WPRI WPRI MDT MPELP WPRI MPV GVA MBE SBE SXL[1:0] UXL[1:0]
+
+31 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+WPRI SDT SPELP TSR TW TVM MXR SUM MPRV XS[1:0] FS[1:0] MPP[1:0] VS[1:0] SPP MPIE UBE SPIE WPRI MIE WPRI SIE WPRI
+```
+
+### RV32 mstatush Register (Figure 9)
+
+For RV32 only, mstatush is a 32-bit read/write register formatted as shown below. Bits 30:4 of mstatush generally contain the same fields found in bits 62:36 of mstatus for RV64.
+
+```
+31 16 15 11 10 9 8 7 6 5 4 3 0
+WPRI WPRI MDT MPELP WPRI MPV GVA MBE SBE WPRI
+```
+
+---
+
+## Field Descriptions
+
+### SD (State Dirty)
+- **Location:** Bit 63 (RV64), Bit 31 (RV32)
+- **Type:** Read-only
+- **Description:** The SD bit is a read-only bit that summarizes whether either the FS, VS, or XS fields signal the presence of some dirty state that will require saving extended user context to memory. If FS, XS, and VS are all read-only zero, then SD is also always zero. SD=(FS==0b11 OR XS==0b11 OR VS==0b11)
+- **Dependency:** Only meaningful when F extension or V extension is implemented
+
+### MDT (Machine Disable Trap)
+- **Location:** Bit 42 (RV64 only), Bit 10 in mstatush (RV32)
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Written to 1 when entering M-mode from an exception/interrupt. When returning via an MRET instruction, the bit is written to 0. On reset is set to 1, and software should write it to 0 when boot sequence is done. When mstatus.MDT=1, direct write by CSR instruction cannot set mstatus.MIE to 1, if not written together.
+- **Dependency:** Only exists when Smdbltrp extension is implemented
+
+### MPELP (Machine Previous Expected Landing Pad)
+- **Location:** Bit 41 (RV64 only), Bit 9 in mstatush (RV32)
+- **Type:** WARL
+- **Description:** Holds the previous ELP state. Encoded as: 0 = NO_LP_EXPECTED (no landing pad instruction expected), 1 = LP_EXPECTED (a landing pad instruction is expected)
+- **Dependency:** Added by Zicfilp extension
+
+### MPV (Machine Previous Virtualization mode)
+- **Location:** Bit 39 (RV64 only), Bit 7 in mstatush (RV32)
+- **Type:** Read-write with hardware update
+- **Description:** Written with the prior virtualization mode when entering M-mode from an exception/interrupt. When returning via an MRET instruction, the virtualization mode becomes the value of MPV unless MPP=3, in which case the virtualization mode is always 0.
+- **Dependency:** Only exists in RV64 when H (Hypervisor) extension is implemented
+
+### GVA (Guest Virtual Address)
+- **Location:** Bit 38 (RV64 only), Bit 6 in mstatush (RV32)
+- **Type:** Read-write with hardware update
+- **Description:** When a trap is taken and a guest virtual address is written into mtval, GVA is set. When a trap is taken and a non-guest virtual address is written into mtval, GVA is cleared.
+- **Dependency:** Only exists in RV64 when H (Hypervisor) extension is implemented
+
+### MBE (M-mode Big Endian)
+- **Location:** Bit 37 (RV64 only), Bit 5 in mstatush (RV32)
+- **Type:** WARL (Read-only or Read-write, implementation-defined)
+- **Description:** Controls the endianness of data in M-mode (0 = little endian, 1 = big endian). Instructions are always little endian regardless of the data setting.
+- **Dependency:** Only exists in RV64
+
+### SBE (S-mode Big Endian)
+- **Location:** Bit 36 (RV64 only), Bit 4 in mstatush (RV32)
+- **Type:** WARL (Read-only or Read-write, implementation-defined)
+- **Description:** Controls the endianness of data in S-mode (0 = little endian, 1 = big endian). Instructions are always little endian.
+- **Dependency:** Only exists in RV64 when S extension is implemented
+
+### SXL (S-mode XLEN)
+- **Location:** Bits 35-34 (RV64 only)
+- **Type:** WARL (Read-write)
+- **Description:** Sets the effective XLEN for S-mode (1 = 32-bit, 2 = 64-bit, 3 = 128-bit [reserved]).
+- **Dependency:** Only exists in RV64 when S extension is implemented
+
+### UXL (U-mode XLEN)
+- **Location:** Bits 33-32 (RV64 only)
+- **Type:** WARL (Read-write)
+- **Description:** Sets the effective XLEN for U-mode (1 = 32-bit, 2 = 64-bit, 3 = 128-bit [reserved]).
+- **Dependency:** Only exists in RV64 when U extension is implemented
+
+### SDT (Supervisor Disable Trap)
+- **Location:** Bit 24 (both RV32 and RV64)
+- **Type:** WARL
+- **Description:** Similar to MDT but for S-mode. Part of double trap control mechanism.
+- **Dependency:** Added by Smdbltrp extension
+
+### SPELP (Supervisor Previous Expected Landing Pad)
+- **Location:** Bit 23 (both RV32 and RV64)
+- **Type:** WARL
+- **Description:** Holds the previous ELP state for S-mode.
+- **Dependency:** Added by Zicfilp extension
+
+### TSR (Trap SRET)
+- **Location:** Bit 22
+- **Type:** WARL (Read-write)
+- **Description:** When set, attempts to execute SRET in S-mode will raise an illegal-instruction exception. When clear, this operation is permitted in S-mode.
+- **Dependency:** Requires S extension
+
+### TW (Timeout Wait)
+- **Location:** Bit 21
+- **Type:** WARL (Read-write)
+- **Description:** When set, WFI instruction will raise an Illegal Instruction trap after an implementation-defined wait period when executed in a mode other than M-mode.
+- **Dependency:** Requires S extension
+
+### TVM (Trap Virtual Memory)
+- **Location:** Bit 20
+- **Type:** WARL (Read-write)
+- **Description:** When set, attempts to read or write the satp CSR or execute SFENCE.VMA or SINVAL.VMA in S-mode will raise an illegal-instruction exception.
+- **Dependency:** Requires S extension
+
+### MXR (Make eXecutable Readable)
+- **Location:** Bit 19
+- **Type:** Read-write
+- **Description:** When set, loads from pages marked either readable or executable (R=1 or X=1) will succeed. When clear, only loads from pages marked readable (R=1) will succeed.
+- **Dependency:** Requires S extension
+
+### SUM (permit Supervisor User Memory access)
+- **Location:** Bit 18
+- **Type:** Read-write
+- **Description:** When clear, S-mode memory accesses to pages that are accessible by U-mode (U=1) will fault. When set, these accesses are permitted.
+- **Dependency:** Requires S extension
+
+### MPRV (Modify PRiVilege)
+- **Location:** Bit 17
+- **Type:** Read-write with hardware update
+- **Description:** When set, load and store memory addresses are translated and protected as though the current privilege mode were set to MPP. Instruction address-translation and protection are unaffected. Cleared on exception return to mode less privileged than M.
+- **Dependency:** Requires U extension
+
+### XS (custom eXtension Status)
+- **Location:** Bits 16-15
+- **Type:** Read-only
+- **Description:** Summarizes the state of custom extensions. Since there are no custom extensions in the base spec, this field is read-only zero.
+- **Values:** 0=Off, 1=Initial, 2=Clean, 3=Dirty
+
+### FS (Floating-point Status)
+- **Location:** Bits 14-13
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Tracks the state of floating-point unit (0=Off, 1=Initial, 2=Clean, 3=Dirty). When FS=0, floating-point instructions raise Illegal Instruction exceptions.
+- **Dependency:** Requires F extension or S extension
+- **Values:** 0=Off, 1=Initial, 2=Clean, 3=Dirty
+
+### MPP (Machine Previous Privilege)
+- **Location:** Bits 12-11
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Holds the privilege mode prior to a trap into M-mode. On MRET, the privilege mode is restored from MPP. Valid values: 00=U-mode, 01=S-mode, 11=M-mode (10 is reserved).
+- **Reset Value:** 11 (M-mode)
+
+### VS (Vector Status)
+- **Location:** Bits 10-9
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Tracks the state of vector unit (0=Off, 1=Initial, 2=Clean, 3=Dirty). When VS=0, vector instructions raise Illegal Instruction exceptions.
+- **Dependency:** Requires V extension or S extension
+- **Values:** 0=Off, 1=Initial, 2=Clean, 3=Dirty
+
+### SPP (Supervisor Previous Privilege)
+- **Location:** Bit 8
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Holds the privilege mode prior to a trap into S-mode. On SRET, the privilege mode is restored from SPP. Valid values: 0=U-mode, 1=S-mode.
+- **Dependency:** Requires S extension
+
+### MPIE (Machine Previous Interrupt Enable)
+- **Location:** Bit 7
+- **Type:** Read-write with hardware update
+- **Description:** Holds the value of MIE prior to a trap into M-mode. On MRET, MIE is restored from MPIE, and MPIE is set to 1.
+
+### UBE (U-mode Big Endian)
+- **Location:** Bit 6
+- **Type:** WARL (Read-only or Read-write, implementation-defined)
+- **Description:** Controls the endianness of data in U-mode (0 = little endian, 1 = big endian). Instructions are always little endian.
+- **Dependency:** Requires U extension
+
+### SPIE (Supervisor Previous Interrupt Enable)
+- **Location:** Bit 5
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Holds the value of SIE prior to a trap into S-mode. On SRET, SIE is restored from SPIE, and SPIE is set to 1.
+- **Dependency:** Requires S extension
+
+### MIE (Machine Interrupt Enable)
+- **Location:** Bit 3
+- **Type:** Read-write with hardware update
+- **Description:** Global interrupt-enable bit for M-mode. When clear, all interrupts are disabled in M-mode. When set, interrupts that are not otherwise disabled with a field in mie are enabled.
+- **Reset Value:** 0
+
+### SIE (Supervisor Interrupt Enable)
+- **Location:** Bit 1
+- **Type:** WARL (Read-write with hardware update)
+- **Description:** Global interrupt-enable bit for S-mode. When clear, all S-mode interrupts are disabled when the current privilege level is S (M-mode interrupts are still enabled). When set, S-mode interrupts that are not otherwise disabled with a field in sie are enabled.
+- **Dependency:** Requires S extension
+
+### Reserved/WPRI Bits
+- **Bits 62-48 (RV64):** Reserved (WPRI - Write Preserve, Read Ignore)
+- **Bits 47-43 (RV64):** Reserved (WPRI)
+- **Bits 40 (RV64):** Reserved (WPRI)
+- **Bits 31-25 (RV64):** Reserved (WPRI)
+- **Bits 30-25 (RV32):** Reserved (WPRI)
+- **Bit 4 (both):** Reserved (WPRI)
+- **Bit 2 (both):** Reserved (WPRI)
+- **Bit 0 (both):** Reserved (WPRI)
+
+All reserved bits should be preserved on writes (WPRI - Write Preserve, Read Ignore).
+
+---
+
+**Source:** The RISC-V Instruction Set Manual, Volume II: Privileged Architecture, Version 1.13, Chapter 3, Section 3.1.6

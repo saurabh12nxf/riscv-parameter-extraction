@@ -1,0 +1,117 @@
+You are an expert in RISC-V architecture specification analysis. Your task is to extract architectural parameters from the following text excerpt from the RISC-V Privileged ISA Specification.
+
+## CLASSIFICATION RULES
+
+### 1. NAMED Parameters
+- Parameters with explicit names in diagrams and clear descriptions
+- Have official field names in the specification
+- Example: "SD" (State Dirty), "MIE" (Machine Interrupt Enable)
+
+### 2. UNNAMED Parameters
+- Reserved bits or fields without official names
+- May be labeled as "Reserved", "WPRI", "WARL", or have generic placeholders
+- Require unique naming following the pattern: <REGISTER>_RESERVED_<BIT_RANGE>
+- Example: "MSTATUS_RESERVED_4" for reserved bit 4 in mstatus
+
+### 3. CONFIG-DEPENDENT Parameters
+- Parameters that only exist when specific extensions are implemented
+- Behavior changes based on XLEN (32-bit vs 64-bit)
+- Must have explicit dependency mentioned in specification
+- Example: "VS" field only exists if V (Vector) extension is implemented
+
+## FEW-SHOT EXAMPLES
+
+### Example 1: Named, Config-Dependent
+```json
+{
+  "name": "SD",
+  "bit_range_rv32": "31",
+  "bit_range_rv64": "63",
+  "type": "NAMED",
+  "config_dependency": "F or V extension",
+  "description": "State Dirty - Read-only bit that summarizes whether either the FS, XS, or VS fields signal the presence of some dirty state",
+  "reasoning": "Has explicit name 'SD' in diagram, clear description, and dependency on F or V extensions stated in text"
+}
+```
+
+### Example 2: Named, Not Config-Dependent
+```json
+{
+  "name": "MPP",
+  "bit_range_rv32": "12-11",
+  "bit_range_rv64": "12-11",
+  "type": "NAMED",
+  "config_dependency": null,
+  "description": "Machine Previous Privilege - Holds the privilege mode prior to a trap",
+  "reasoning": "Has explicit name 'MPP', clear description, always present in mstatus register"
+}
+```
+
+### Example 3: Unnamed (Reserved)
+```json
+{
+  "name": "MSTATUS_RESERVED_4",
+  "bit_range_rv32": "4",
+  "bit_range_rv64": "4",
+  "type": "UNNAMED",
+  "config_dependency": null,
+  "description": "Reserved bit, must be preserved on write",
+  "reasoning": "Labeled as 'Reserved' in specification, no official name provided, assigned unique name following convention"
+}
+```
+
+### Example 4: Config-Dependent with XLEN
+```json
+{
+  "name": "SXL",
+  "bit_range_rv32": null,
+  "bit_range_rv64": "35-34",
+  "type": "CONFIG_DEPENDENT",
+  "config_dependency": "S extension and XLEN=64",
+  "description": "Supervisor XLEN - Controls the effective XLEN for S-mode",
+  "reasoning": "Only exists in RV64 (not in RV32), requires S extension, explicitly stated as configuration-dependent"
+}
+```
+
+## IMPORTANT INSTRUCTIONS
+
+1. **Extract ALL parameters** mentioned in the text, including reserved bits
+2. **Parse both RV32 and RV64 layouts** separately if provided
+3. **Do NOT infer dependencies** not explicitly stated in the text
+4. **Do NOT hallucinate** field names or descriptions
+5. **Assign unique names** to unnamed/reserved bits using the convention: <REGISTER>_RESERVED_<BIT_RANGE>
+6. **Include confidence score** (0-100) for each parameter
+7. **Provide reasoning** for each classification decision
+
+## OUTPUT FORMAT
+
+Return a JSON object with the following structure:
+
+```json
+{
+  "register_name": "mstatus",
+  "source": "RISC-V Privileged ISA Specification, Chapter 3",
+  "total_parameters": 22,
+  "parameters": [
+    {
+      "name": "SD",
+      "bit_range_rv32": "31",
+      "bit_range_rv64": "63",
+      "type": "NAMED | UNNAMED | CONFIG_DEPENDENT",
+      "config_dependency": "extension or XLEN requirement, or null",
+      "description": "Brief description from spec",
+      "reasoning": "Why this classification was chosen",
+      "confidence": 95
+    }
+  ],
+  "notes": "Any additional observations or uncertainties"
+}
+```
+
+## INPUT TEXT
+
+{INPUT_TEXT_HERE}
+
+## YOUR TASK
+
+Analyze the above text and extract ALL architectural parameters following the classification rules and output format. Be thorough and conservative - if unsure about a dependency, mark it as null rather than guessing.
