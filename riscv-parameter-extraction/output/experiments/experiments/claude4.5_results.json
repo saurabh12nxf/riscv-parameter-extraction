@@ -1,0 +1,348 @@
+{
+  "register_name": "mstatus",
+  "source": "RISC-V Privileged ISA Specification v1.13, Chapter 3, Section 3.1.6",
+  "total_parameters": 35,
+  "parameters": [
+    {
+      "name": "SD",
+      "bit_range_rv32": "31",
+      "bit_range_rv64": "63",
+      "type": "NAMED",
+      "config_dependency": "F extension or V extension",
+      "description": "State Dirty - Read-only bit that summarizes whether either the FS, VS, or XS fields signal the presence of some dirty state. SD=(FS==0b11 OR XS==0b11 OR VS==0b11)",
+      "reasoning": "Has explicit name 'SD' in diagram and description. Dependency explicitly stated: 'Only meaningful when F extension or V extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_62_48",
+      "bit_range_rv32": null,
+      "bit_range_rv64": "62-48",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bits (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in RV64 diagram and explicitly listed as reserved in specification",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_47_43",
+      "bit_range_rv32": null,
+      "bit_range_rv64": "47-43",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bits (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in RV64 diagram and explicitly listed as reserved in specification",
+      "confidence": 100
+    },
+    {
+      "name": "MDT",
+      "bit_range_rv32": "10 (in mstatush)",
+      "bit_range_rv64": "42",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "Smdbltrp extension",
+      "description": "Machine Disable Trap - Written to 1 when entering M-mode from exception/interrupt. Controls whether CSR instruction can set mstatus.MIE to 1",
+      "reasoning": "Explicitly stated: 'Only exists when Smdbltrp extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "MPELP",
+      "bit_range_rv32": "9 (in mstatush)",
+      "bit_range_rv64": "41",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "Zicfilp extension",
+      "description": "Machine Previous Expected Landing Pad - Holds the previous ELP state. 0=NO_LP_EXPECTED, 1=LP_EXPECTED",
+      "reasoning": "Explicitly stated: 'Added by Zicfilp extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_40",
+      "bit_range_rv32": null,
+      "bit_range_rv64": "40",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bit (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in RV64 diagram and explicitly listed as reserved in specification",
+      "confidence": 100
+    },
+    {
+      "name": "MPV",
+      "bit_range_rv32": "7 (in mstatush)",
+      "bit_range_rv64": "39",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "H extension (Hypervisor) and XLEN=64",
+      "description": "Machine Previous Virtualization mode - Written with the prior virtualization mode when entering M-mode from exception/interrupt",
+      "reasoning": "Explicitly stated: 'Only exists in RV64 when H (Hypervisor) extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "GVA",
+      "bit_range_rv32": "6 (in mstatush)",
+      "bit_range_rv64": "38",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "H extension (Hypervisor) and XLEN=64",
+      "description": "Guest Virtual Address - Set when a trap is taken and a guest virtual address is written into mtval",
+      "reasoning": "Explicitly stated: 'Only exists in RV64 when H (Hypervisor) extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "MBE",
+      "bit_range_rv32": "5 (in mstatush)",
+      "bit_range_rv64": "37",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "XLEN=64",
+      "description": "M-mode Big Endian - Controls the endianness of data in M-mode (0=little endian, 1=big endian)",
+      "reasoning": "Explicitly stated: 'Only exists in RV64'. Present in mstatush for RV32 but that's a different register context",
+      "confidence": 95
+    },
+    {
+      "name": "SBE",
+      "bit_range_rv32": "4 (in mstatush)",
+      "bit_range_rv64": "36",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension and XLEN=64",
+      "description": "S-mode Big Endian - Controls the endianness of data in S-mode (0=little endian, 1=big endian)",
+      "reasoning": "Explicitly stated: 'Only exists in RV64 when S extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "SXL",
+      "bit_range_rv32": null,
+      "bit_range_rv64": "35-34",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension and XLEN=64",
+      "description": "S-mode XLEN - Sets the effective XLEN for S-mode (1=32-bit, 2=64-bit, 3=128-bit reserved)",
+      "reasoning": "Explicitly stated: 'Only exists in RV64 when S extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "UXL",
+      "bit_range_rv32": null,
+      "bit_range_rv64": "33-32",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "U extension and XLEN=64",
+      "description": "U-mode XLEN - Sets the effective XLEN for U-mode (1=32-bit, 2=64-bit, 3=128-bit reserved)",
+      "reasoning": "Explicitly stated: 'Only exists in RV64 when U extension is implemented'",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_31_25",
+      "bit_range_rv32": "30-25",
+      "bit_range_rv64": "31-25",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bits (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in both diagrams. Note: RV32 has bits 30-25, RV64 has bits 31-25 as reserved",
+      "confidence": 100
+    },
+    {
+      "name": "SDT",
+      "bit_range_rv32": "24",
+      "bit_range_rv64": "24",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "Smdbltrp extension",
+      "description": "Supervisor Disable Trap - Similar to MDT but for S-mode. Part of double trap control mechanism",
+      "reasoning": "Explicitly stated: 'Added by Smdbltrp extension'",
+      "confidence": 100
+    },
+    {
+      "name": "SPELP",
+      "bit_range_rv32": "23",
+      "bit_range_rv64": "23",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "Zicfilp extension",
+      "description": "Supervisor Previous Expected Landing Pad - Holds the previous ELP state for S-mode",
+      "reasoning": "Explicitly stated: 'Added by Zicfilp extension'",
+      "confidence": 100
+    },
+    {
+      "name": "TSR",
+      "bit_range_rv32": "22",
+      "bit_range_rv64": "22",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Trap SRET - When set, attempts to execute SRET in S-mode will raise an illegal-instruction exception",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "TW",
+      "bit_range_rv32": "21",
+      "bit_range_rv64": "21",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Timeout Wait - When set, WFI instruction will raise an Illegal Instruction trap after implementation-defined wait period when executed in mode other than M-mode",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "TVM",
+      "bit_range_rv32": "20",
+      "bit_range_rv64": "20",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Trap Virtual Memory - When set, attempts to read/write satp CSR or execute SFENCE.VMA or SINVAL.VMA in S-mode will raise illegal-instruction exception",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MXR",
+      "bit_range_rv32": "19",
+      "bit_range_rv64": "19",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Make eXecutable Readable - When set, loads from pages marked either readable or executable will succeed",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "SUM",
+      "bit_range_rv32": "18",
+      "bit_range_rv64": "18",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "permit Supervisor User Memory access - When clear, S-mode memory accesses to pages accessible by U-mode will fault",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MPRV",
+      "bit_range_rv32": "17",
+      "bit_range_rv64": "17",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "U extension",
+      "description": "Modify PRiVilege - When set, load/store addresses are translated and protected as though current privilege mode were set to MPP",
+      "reasoning": "Explicitly stated: 'Requires U extension'",
+      "confidence": 100
+    },
+    {
+      "name": "XS",
+      "bit_range_rv32": "16-15",
+      "bit_range_rv64": "16-15",
+      "type": "NAMED",
+      "config_dependency": null,
+      "description": "custom eXtension Status - Summarizes the state of custom extensions. Read-only zero in base spec (0=Off, 1=Initial, 2=Clean, 3=Dirty)",
+      "reasoning": "Has explicit name 'XS' in diagram. Specification states it's read-only zero since there are no custom extensions in base spec, so no dependency",
+      "confidence": 95
+    },
+    {
+      "name": "FS",
+      "bit_range_rv32": "14-13",
+      "bit_range_rv64": "14-13",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "F extension or S extension",
+      "description": "Floating-point Status - Tracks state of floating-point unit (0=Off, 1=Initial, 2=Clean, 3=Dirty). When FS=0, FP instructions raise Illegal Instruction exceptions",
+      "reasoning": "Explicitly stated: 'Requires F extension or S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MPP",
+      "bit_range_rv32": "12-11",
+      "bit_range_rv64": "12-11",
+      "type": "NAMED",
+      "config_dependency": null,
+      "description": "Machine Previous Privilege - Holds the privilege mode prior to a trap into M-mode. Valid values: 00=U-mode, 01=S-mode, 11=M-mode",
+      "reasoning": "Has explicit name 'MPP' in diagram. Always present in mstatus - no dependency stated",
+      "confidence": 100
+    },
+    {
+      "name": "VS",
+      "bit_range_rv32": "10-9",
+      "bit_range_rv64": "10-9",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "V extension or S extension",
+      "description": "Vector Status - Tracks state of vector unit (0=Off, 1=Initial, 2=Clean, 3=Dirty). When VS=0, vector instructions raise Illegal Instruction exceptions",
+      "reasoning": "Explicitly stated: 'Requires V extension or S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "SPP",
+      "bit_range_rv32": "8",
+      "bit_range_rv64": "8",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Supervisor Previous Privilege - Holds the privilege mode prior to a trap into S-mode. Valid values: 0=U-mode, 1=S-mode",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MPIE",
+      "bit_range_rv32": "7",
+      "bit_range_rv64": "7",
+      "type": "NAMED",
+      "config_dependency": null,
+      "description": "Machine Previous Interrupt Enable - Holds the value of MIE prior to a trap into M-mode. On MRET, MIE is restored from MPIE",
+      "reasoning": "Has explicit name 'MPIE' in diagram. Always present in mstatus - no dependency stated",
+      "confidence": 100
+    },
+    {
+      "name": "UBE",
+      "bit_range_rv32": "6",
+      "bit_range_rv64": "6",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "U extension",
+      "description": "U-mode Big Endian - Controls the endianness of data in U-mode (0=little endian, 1=big endian)",
+      "reasoning": "Explicitly stated: 'Requires U extension'",
+      "confidence": 100
+    },
+    {
+      "name": "SPIE",
+      "bit_range_rv32": "5",
+      "bit_range_rv64": "5",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Supervisor Previous Interrupt Enable - Holds the value of SIE prior to a trap into S-mode. On SRET, SIE is restored from SPIE",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_4",
+      "bit_range_rv32": "4",
+      "bit_range_rv64": "4",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bit (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in both diagrams and explicitly listed as reserved in specification",
+      "confidence": 100
+    },
+    {
+      "name": "MIE",
+      "bit_range_rv32": "3",
+      "bit_range_rv64": "3",
+      "type": "NAMED",
+      "config_dependency": null,
+      "description": "Machine Interrupt Enable - Global interrupt-enable bit for M-mode. When clear, all interrupts are disabled in M-mode",
+      "reasoning": "Has explicit name 'MIE' in diagram. Always present in mstatus - no dependency stated",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_2",
+      "bit_range_rv32": "2",
+      "bit_range_rv64": "2",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bit (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in both diagrams and explicitly listed as reserved in specification",
+      "confidence": 100
+    },
+    {
+      "name": "SIE",
+      "bit_range_rv32": "1",
+      "bit_range_rv64": "1",
+      "type": "CONFIG_DEPENDENT",
+      "config_dependency": "S extension",
+      "description": "Supervisor Interrupt Enable - Global interrupt-enable bit for S-mode. When clear, all S-mode interrupts are disabled when current privilege is S",
+      "reasoning": "Explicitly stated: 'Requires S extension'",
+      "confidence": 100
+    },
+    {
+      "name": "MSTATUS_RESERVED_0",
+      "bit_range_rv32": "0",
+      "bit_range_rv64": "0",
+      "type": "UNNAMED",
+      "config_dependency": null,
+      "description": "Reserved bit (WPRI - Write Preserve, Read Ignore)",
+      "reasoning": "Labeled as 'WPRI' in both diagrams and explicitly listed as reserved in specification",
+      "confidence": 100
+    }
+  ],
+  "notes": "Analysis complete. Total of 35 parameters extracted from mstatus register specification. Key observations: (1) RV32 has additional mstatush register containing bits 62:36 equivalent fields; (2) Multiple fields are extension-dependent (S, U, F, V, H, Smdbltrp, Zicfilp); (3) Some fields only exist in RV64 (SXL, UXL, and several endianness/virtualization fields in main mstatus vs mstatush); (4) Reserved bits follow WPRI (Write Preserve, Read Ignore) semantics; (5) XS field is always read-only zero in base specification but included as NAMED type since it has explicit designation."
+}
