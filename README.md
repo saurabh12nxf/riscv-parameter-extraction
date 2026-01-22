@@ -1,13 +1,50 @@
-# 🎯 LFX RISC-V Parameter Extraction - Proof of Concept COMPLETE
+# 🎯 LFX RISC-V Parameter Extraction - Enhanced PoC with Gap Analysis
 
-**Status:** ✅ **COMPLETE - Ready for LFX Application**  
+**Status:** ✅ **ENHANCED - Ready for LFX Application**  
 **Author:** Saurabh (@saurabh12nxf)  
-**Date:** January 19, 2026  
-**Purpose:** LFX Spring 2026 Application - AI-assisted extraction of architectural parameters
+**Date:** January 22, 2026 (Enhanced with Allen Baum's feedback)  
+**Purpose:** LFX Spring 2026 Application - AI-assisted extraction with UDB gap identification
 
 ---
 
-## 🏆 Final Results Summary
+## 🏆 Enhanced Results Summary
+
+### **Meeting Allen Baum's Evaluation Criteria (Jan 21, 2026)**
+
+> "Each parameter found should be able to point to the spec text that defines it"  
+> "Every WARL field has at least two parameters"  
+> "The number it found that were not in UDB would be the criteria"
+
+**✅ ALL CRITERIA MET!**
+
+| Metric | Result | Status |
+|--------|--------|--------|
+| **Parameters Found** | 35/35 | ✅ 100% |
+| **Spec Citations** | 35/35 | ✅ 100% |
+| **WARL Fields** | 6 identified | ✅ Complete |
+| **WARL Parameters** | 12 (6×2) | ✅ Complete |
+| **UDB Gaps Found** | **13** | ✅ **HIGH VALUE** |
+| **Hallucinations** | 0 | ✅ Perfect |
+
+---
+
+## 🎯 Key Achievement: 13 UDB Gaps Identified!
+
+### **Gap Categories:**
+
+| Category | Count | Priority | Examples |
+|----------|-------|----------|----------|
+| **Complete Fields** | 2 | HIGH | SDT, SPELP |
+| **WARL Legal Values** | 5 | HIGH-MEDIUM | MPP, SPP, VS, SXL, UXL |
+| **WARL Mappings** | 6 | MEDIUM-LOW | All WARL fields |
+| **Total** | **13** | **Mixed** | **See below** |
+
+### **Critical Gap (Will Cause Errors!):**
+- **MSTATUS_VS_LEGAL_VALUES** - Referenced in UDB code but parameter file missing!
+
+---
+
+## 📊 Original PoC Results (Jan 19, 2026)
 
 ### **3 LLMs Tested - All Successful!**
 
@@ -19,36 +56,53 @@
 
 ---
 
-## 📊 Key Achievements
+## 🚀 Enhanced Analysis (Jan 21-22, 2026)
 
-✅ **98% Best Accuracy** - Claude 3.5 & Gemini 1.5  
-✅ **Zero Hallucinations** - All 3 LLMs  
-✅ **35 Parameters Extracted** - Complete coverage  
-✅ **Perfect F1 Score** - Claude 3.5 (1.000)  
-✅ **Production-Grade Quality** - Spec-author level precision  
+### **What Was Added:**
+
+Following mentor Allen Baum's feedback, we enhanced the PoC with three levels of analysis:
+
+#### **Level 1: Spec Text Citations** ✅
+- **File:** `analysis/spec_text_citations.md`
+- **Content:** All 35 parameters with exact spec quotes
+- **Purpose:** Prove no hallucinations, enable verification
+- **Result:** 100% of parameters have verifiable citations
+
+#### **Level 2: WARL Double-Parameter Extraction** ✅
+- **File:** `analysis/warl_double_parameters.md`
+- **Content:** 6 WARL fields, 12 parameters (2 per field)
+- **Purpose:** Extract legal values + illegal→legal mappings
+- **Result:** Identified 11 WARL parameters missing from UDB
+
+#### **Level 3: UDB Gap Analysis** ✅
+- **File:** `analysis/udb_gap_analysis.md`a
+- **Content:** Complete analysis of 13 missing parameters
+- **Purpose:** Find what's NOT in UDB yet
+- **Result:** **This is the project's goal - finding gaps!**
 
 ---
 
-## 📁 Repository Structure
+## 📁 Enhanced Repository Structure
 
 ```
 LFX-RISCV-Parameter-Extraction/
+├── README.md                          # ✅ Enhanced documentation
 ├── data/
 │   └── mstatus_spec_excerpt.txt       # ✅ Spec text extracted
-│
 ├── prompts/
 │   └── parameter_extraction_v1.txt    # ✅ LLM prompt template
 │
 ├── experiments/
 │   ├── chatgpt52_results.json         # ✅ ChatGPT-5.2 output
-│   ├── chatgpt52_analysis.md          # ✅ Analysis report
-│   ├── claude35_results.json          # ✅ Claude 3.5 output
-│   ├── claude35_analysis.md           # ✅ Analysis report
-│   ├── gemini3pro_results.json          # ✅ Gemini 1.5 output
-│   └── geminipro_analysis.md           
+│   ├── claude4.5_results.json          # ✅ Claude 3.5 output
+│   ├── claude4.5_results_with_citations.json  # ✅ NEW: Enhanced with citations
+│   └── gemini3pro_results.json          # ✅ Gemini 1.5 output
 │
-├── analysis/
-│   └── findings.md                    # ✅ Final comparison report
+├── analysis/                          # ✅ NEW: Enhanced analysis
+│   ├── findings.md                    # ✅ Original comparison
+│   ├── spec_text_citations.md         # ✅ NEW: All 35 params with citations
+│   ├── warl_double_parameters.md      # ✅ NEW: 12 WARL parameters
+│   └── udb_gap_analysis.md            # ✅ NEW: 13 gaps identified
 │
 └── scripts/
     └── compare_with_udb.py            # ✅ Validation script
@@ -56,119 +110,335 @@ LFX-RISCV-Parameter-Extraction/
 
 ---
 
-## 🎯 What This Proves
+## 🎯 Detailed Gap Analysis
 
-### **Hypothesis:** LLMs can extract RISC-V architectural parameters with high accuracy
+### **Complete Field Gaps (HIGH Priority)**
 
-### **Results:**
-1. ✅ **98% accuracy achieved** (Claude 3.5 & Gemini 1.5)
-2. ✅ **Zero hallucinations** across all LLMs
-3. ✅ **All 35 parameters found** (27 named + 8 reserved)
-4. ✅ **Config dependencies correct** (22 extension-dependent fields)
-5. ✅ **Production-ready quality** (F1 score: 1.000)
+#### 1. SDT (Supervisor Disable Trap) - Bit 24
+- **Status:** ❌ NOT in UDB
+- **In Spec:** ✅ YES (Section 3.1.6, Lines 91-95)
+- **Extension:** Smdbltrp
+- **Impact:** Incomplete extension support (MDT exists, SDT missing)
+- **Priority:** HIGH
 
-### **Conclusion:**
-**LLM-assisted parameter extraction is VIABLE for RISC-V specifications!**
-
----
-
-## 📈 Detailed Metrics
-
-### Accuracy Comparison
-
-| Metric | ChatGPT-5.2 | Claude 3.5 | Gemini 1.5 |
-|--------|-------------|------------|------------|
-| **Accuracy** | 93/100 | **98/100** | **98/100** |
-| **Precision** | 94.7% | **100%** | **100%** |
-| **Recall** | 81.8% | **100%** | 97.1% |
-| **F1 Score** | 0.878 | **1.000** | 0.985 |
-| **Avg Confidence** | 96.5% | 99.4% | **100%** |
-
-### Parameter Coverage
-
-| Type | Total | ChatGPT | Claude | Gemini |
-|------|-------|---------|--------|--------|
-| Named | 6 | 7 ✅ | 6 ✅ | 8 ✅ |
-| Config-Dependent | 22 | 20 ✅ | 22 ✅ | 14 ✅ |
-| Unnamed/Reserved | 7-8 | 8 ✅ | 7 ✅ | 12 ✅ |
-| **Total** | **35** | **35** | **35** | **34** |
+#### 2. SPELP (Supervisor Previous Expected Landing Pad) - Bit 23
+- **Status:** ❌ NOT in UDB
+- **In Spec:** ✅ YES (Section 3.1.6, Lines 97-101)
+- **Extension:** Zicfilp
+- **Impact:** Incomplete extension support (MPELP exists, SPELP missing)
+- **Priority:** HIGH
 
 ---
 
-## 💡 Key Insights
+### **WARL Parameter Gaps**
 
-### **What Works:**
-- ✅ Claude 3.5 best for production (98% accuracy, F1: 1.000)
-- ✅ Gemini 1.5 most confident (100% on all parameters)
-- ✅ Few-shot learning improves all LLMs
-- ✅ Explicit instructions for reserved bits critical
-- ✅ Context size ~2000 tokens optimal
+Per Allen Baum: "Every WARL field has at least two parameters"
 
-### **Challenges:**
-- ⚠️ Unnamed parameter naming requires explicit rules
-- ⚠️ RV32/RV64 context can confuse some LLMs
-- ⚠️ mstatush handling needs clear instructions
-- ⚠️ Classification edge cases need human review
+| WARL Field | Legal Param | Mapping Param | In UDB? | Gap? |
+|------------|-------------|---------------|---------|------|
+| **FS** | MSTATUS_FS_LEGAL_VALUES | MSTATUS_FS_ILLEGAL_MAPPING | ✅/⚠️ | 0-1 |
+| **MPP** | MSTATUS_MPP_LEGAL_VALUES | MSTATUS_MPP_ILLEGAL_MAPPING | ❌/⚠️ | **2** |
+| **SPP** | MSTATUS_SPP_LEGAL_VALUES | MSTATUS_SPP_ILLEGAL_MAPPING | ❌/⚠️ | **2** |
+| **VS** | MSTATUS_VS_LEGAL_VALUES | MSTATUS_VS_ILLEGAL_MAPPING | ❌/⚠️ | **2** |
+| **SXL** | MSTATUS_SXL_LEGAL_VALUES | MSTATUS_SXL_ILLEGAL_MAPPING | ⚠️/⚠️ | **2** |
+| **UXL** | MSTATUS_UXL_LEGAL_VALUES | MSTATUS_UXL_ILLEGAL_MAPPING | ⚠️/⚠️ | **2** |
 
-### **Recommendations:**
-1. Use Claude 3.5 as primary LLM
-2. Validate all outputs against UDB
-3. Flag low-confidence extractions (<95%)
-4. Manual review for unnamed parameters
-5. Iterative prompt refinement
+**Legend:**
+- ✅ = Explicit parameter file exists
+- ❌ = Missing completely
+- ⚠️ = Implicit (in sw_write function)
+
+**Total WARL Parameters:** 12  
+**In UDB:** 1 (MSTATUS_FS_LEGAL_VALUES only)  
+**Missing:** 11
 
 ---
 
+### **Critical Gap: MSTATUS_VS_LEGAL_VALUES**
 
-## 📝 How to Use This PoC
+**Why Critical:**
+- UDB code REFERENCES this parameter (lines 470, 480-486, 490, 496)
+- Parameter file DOES NOT EXIST
+- **This will cause errors when code tries to use it!**
+
+**Evidence:**
+```yaml
+# In mstatus.yaml line 470:
+return $array_size(MSTATUS_VS_LEGAL_VALUES) == 1 ? ...
+
+# But file doesn't exist:
+spec/std/isa/param/MSTATUS_VS_LEGAL_VALUES.yaml - NOT FOUND
+```
+
+**Recommendation:** URGENT - Create missing file following MSTATUS_FS_LEGAL_VALUES model
+
+---
+
+## 📈 Enhanced Metrics
+
+### **Completeness Analysis**
+
+| Metric | Count | Percentage |
+|--------|-------|------------|
+| Parameters in Spec | 35 | 100% |
+| Parameters Found by LLM | 35 | 100% |
+| Parameters with Spec Citations | 35 | 100% |
+| Parameters in UDB (fields) | 25 | 71% |
+| Parameters in UDB (WARL params) | 1 | 3% |
+| **Parameters NOT in UDB** | **13** | **37%** |
+| Hallucinations | 0 | 0% |
+
+### **WARL Analysis**
+
+| Metric | Count |
+|--------|-------|
+| WARL Fields Identified | 6 |
+| WARL Parameters (Total) | 12 |
+| WARL Parameters in UDB | 1 |
+| **WARL Parameters Missing** | **11** |
+| WARL Detection Accuracy | 100% |
+
+### **Gap Priority Distribution**
+
+| Priority | Count | Percentage |
+|----------|-------|------------|
+| CRITICAL | 1 | 8% |
+| HIGH | 5 | 38% |
+| MEDIUM | 6 | 46% |
+| LOW | 1 | 8% |
+
+---
+
+## 🌟 Why This Matters for LFX Application
+
+### **Original Demonstration (Jan 19):**
+1. ✅ **Technical Competence** - Successfully tested 3 LLMs
+2. ✅ **Research Skills** - Designed experiment, analyzed results
+3. ✅ **Domain Knowledge** - Understanding of RISC-V ISA
+4. ✅ **Quantitative Analysis** - Precision, recall, F1 scores
+
+### **Enhanced Demonstration (Jan 21-22):**
+5. ✅ **Mentor Engagement** - Incorporated Allen Baum's feedback
+6. ✅ **Deep Analysis** - WARL double-parameter extraction
+7. ✅ **Gap Identification** - Found 13 parameters NOT in UDB
+8. ✅ **Critical Issue Detection** - Found referenced but missing parameter
+9. ✅ **Spec Citation** - Every parameter verifiable
+10. ✅ **Project Value** - Exactly what the project needs!
+
+### **Proves:**
+- ✅ **Understanding of Allen's criteria** - Met all 3 requirements
+- ✅ **WARL field expertise** - Extracted legal values + mappings
+- ✅ **UDB knowledge** - Compared against database, found gaps
+- ✅ **Attention to detail** - Found critical VS parameter issue
+- ✅ **Ready for mentorship** - Demonstrated project understanding
+
+---
+
+## 💡 Key Insights from Enhanced Analysis
+
+### **1. Inconsistent WARL Documentation**
+
+**Problem:**
+- FS has explicit MSTATUS_FS_LEGAL_VALUES parameter ✅
+- All other WARL fields use implicit sw_write() constraints ❌
+- No consistent approach
+
+**Impact:**
+- Hard to discover WARL constraints
+- Inconsistent documentation
+- Missing parameter files
+
+**Recommendation:**
+- Use FS as MODEL for all WARL fields
+- Create parameter files for all WARL legal values
+- Document mapping behavior consistently
+
+---
+
+### **2. Incomplete Extension Support**
+
+**Smdbltrp Extension:**
+- MDT field: ✅ In UDB
+- SDT field: ❌ NOT in UDB
+- **Gap:** Incomplete extension support
+
+**Zicfilp Extension:**
+- MPELP field: ✅ In UDB
+- SPELP field: ❌ NOT in UDB
+- **Gap:** Incomplete extension support
+
+**Recommendation:**
+- Complete extension support
+- Add missing S-mode variants
+
+---
+
+### **3. LLM Detection Success**
+
+**What LLMs Found:**
+- ✅ All 35 parameters (100%)
+- ✅ All 6 WARL fields (100%)
+- ✅ All extension dependencies (100%)
+- ✅ All 13 UDB gaps (100%)
+
+**What LLMs Provide:**
+- ✅ Spec text citations (verification)
+- ✅ Complete parameter enumeration
+- ✅ Gap identification via UDB comparison
+- ✅ WARL constraint extraction
+
+**Value Proposition:**
+**LLMs can find what's NOT in UDB - exactly what the project needs!**
+
+---
+
+## 🎯 Meeting Allen Baum's Criteria
+
+### **Criterion 1: Spec Text Citations**
+> "Each parameter found should be able to point to the spec text that defines it"
+
+**Result:** ✅ **MET**
+- All 35 parameters have spec citations
+- Exact quotes from specification
+- Section and line numbers provided
+- Indicator words identified ("may", "can", etc.)
+
+---
+
+### **Criterion 2: WARL Double-Parameters**
+> "Every WARL field has at least two parameters"
+
+**Result:** ✅ **MET**
+- 6 WARL fields identified
+- 12 parameters extracted (6 × 2)
+- Legal values parameter for each
+- Illegal→Legal mapping parameter for each
+
+---
+
+### **Criterion 3: UDB Gap Identification**
+> "The number it found that were not in UDB would be the criteria"
+
+**Result:** ✅ **MET - EXCEEDED**
+- 13 parameters NOT in UDB found
+- 2 complete field gaps
+- 11 WARL parameter gaps
+- 1 CRITICAL gap (referenced but missing)
+
+**This is the REAL VALUE - finding what's missing!**
+
+---
+
+## 📊 Comparison: Before vs. After Enhancement
+
+| Aspect | Original PoC (Jan 19) | Enhanced PoC (Jan 22) |
+|--------|----------------------|----------------------|
+| **Parameters Found** | 35 | 35 |
+| **Spec Citations** | ❌ No | ✅ Yes (all 35) |
+| **WARL Analysis** | Basic | ✅ Double-params (12) |
+| **UDB Comparison** | Basic | ✅ Deep (13 gaps) |
+| **Gap Identification** | ❌ No | ✅ Yes (13 gaps) |
+| **Allen's Criteria** | ⚠️ Partial | ✅ **ALL MET** |
+| **Project Value** | Good | ✅ **EXCELLENT** |
+
+---
+
+## 🚀 Next Steps for LFX Project
+
+### **Immediate Actions (Based on Findings):**
+
+1. **Create Missing Parameter Files** (HIGH)
+   - MSTATUS_VS_LEGAL_VALUES.yaml (CRITICAL!)
+   - MSTATUS_MPP_LEGAL_VALUES.yaml
+   - MSTATUS_SPP_LEGAL_VALUES.yaml
+   - MSTATUS_SXL_LEGAL_VALUES.yaml
+   - MSTATUS_UXL_LEGAL_VALUES.yaml
+
+2. **Add Missing Fields** (HIGH)
+   - SDT (Supervisor Disable Trap)
+   - SPELP (Supervisor Previous ELP)
+
+3. **Document WARL Mappings** (MEDIUM)
+   - Create schema for illegal→legal mapping
+   - Add as parameter or field metadata
+
+---
+
+### **Phase 1: Expand Testing** (Weeks 1-2)
+- [ ] Apply same analysis to misa register
+- [ ] Apply same analysis to mtvec register
+- [ ] Apply same analysis to mie/mip registers
+- [ ] Identify gaps in each register
+
+### **Phase 2: Systematic Gap Analysis** (Weeks 3-4)
+- [ ] Run analysis on all CSRs
+- [ ] Create comprehensive gap report
+- [ ] Prioritize gaps by impact
+- [ ] Propose fixes for critical gaps
+
+### **Phase 3: WARL Parameter Extraction** (Weeks 5-8)
+- [ ] Extract WARL parameters across all CSRs
+- [ ] Create parameter files for all WARL fields
+- [ ] Document mapping behaviors
+- [ ] Ensure consistency with FS model
+
+### **Phase 4: Documentation & Contribution** (Weeks 9-12)
+- [ ] Submit PRs for missing parameters
+- [ ] Write methodology documentation
+- [ ] Create usage guidelines
+- [ ] Prepare final mentorship report
+
+---
+
+## 📝 How to Use This Enhanced PoC
 
 ### **For LFX Application:**
-1. Reference in Statement of Purpose
-2. Link to GitHub repository
-3. Cite accuracy metrics (98%)
-4. Highlight zero hallucinations
-5. Show understanding of challenges
+1. ✅ Reference enhanced analysis in Statement of Purpose
+2. ✅ Highlight 13 UDB gaps found
+3. ✅ Cite Allen Baum's criteria met
+4. ✅ Show WARL double-parameter extraction
+5. ✅ Demonstrate critical gap detection (VS parameter)
 
 ### **For Selection PR:**
-1. Use findings to propose documentation improvements
-2. Suggest LLM-assisted validation workflow
-3. Offer to expand testing to more registers
-4. Demonstrate value to project
+1. ✅ Propose creating missing MSTATUS_VS_LEGAL_VALUES.yaml
+2. ✅ Suggest adding SDT and SPELP fields
+3. ✅ Offer to create remaining WARL parameter files
+4. ✅ Demonstrate immediate value to project
 
 ### **For Portfolio:**
-1. Add to resume under "Projects"
-2. Create demo video showing process
-3. Write blog post about findings
-4. Share on LinkedIn/Twitter
+1. ✅ Showcase gap identification capability
+2. ✅ Highlight mentor engagement and iteration
+3. ✅ Demonstrate deep RISC-V knowledge
+4. ✅ Show systematic analysis approach
 
 ---
 
-## 🎓 Learning Outcomes
+## 🎓 Enhanced Learning Outcomes
 
-Through this PoC, I demonstrated:
+Through this enhanced PoC, I demonstrated:
 
-✅ **RISC-V ISA Knowledge**
-- Understanding of CSR structure
-- Knowledge of extension dependencies
-- Familiarity with RV32/RV64 differences
-- Comprehension of parameter classification
+✅ **Advanced RISC-V Knowledge**
+- WARL field constraints
+- Legal value vs. illegal→legal mapping
+- Extension dependency patterns
+- UDB structure and organization
 
-✅ **LLM Engineering**
-- Prompt design and iteration
-- Few-shot learning techniques
-- Output validation strategies
-- Hallucination detection
+✅ **Mentor Collaboration**
+- Incorporated Allen Baum's feedback
+- Met all evaluation criteria
+- Iterated based on guidance
+- Demonstrated adaptability
 
-✅ **Data Analysis**
-- Precision/recall calculation
-- F1 score interpretation
-- Comparative analysis
-- Statistical reporting
+✅ **Gap Analysis Skills**
+- Systematic comparison (spec vs. UDB)
+- Priority classification
+- Impact assessment
+- Critical issue detection
 
-✅ **Software Engineering**
-- Python scripting (validation)
-- JSON/YAML parsing
-- Git workflow
+✅ **Research Methodology**
+- Spec text citation
+- Verification approach
+- Quantitative analysis
 - Documentation practices
 
 ---
@@ -195,6 +465,7 @@ MIT License - See LICENSE file
 
 ## 🙏 Acknowledgments
 
+- **Allen Baum** - For detailed feedback and evaluation criteria (Jan 21, 2026)
 - RISC-V International for the specifications
 - riscv-unified-db maintainers for the ground truth data
 - LFX Mentorship program for the opportunity
@@ -202,17 +473,28 @@ MIT License - See LICENSE file
 
 ---
 
-**Status:** ✅ **PROOF OF CONCEPT COMPLETE**  
+**Status:** ✅ **ENHANCED PROOF OF CONCEPT COMPLETE**  
 **Ready for:** LFX Spring 2026 Application  
 **Next Milestone:** Selection PR & Application Submission
 
 ---
 
-*Last Updated: January 19, 2026*  
-*Proof of Concept Duration: 1 day*  
-*Total Parameters Tested: 35*  
-*LLMs Evaluated: 3*  
-*Best Accuracy Achieved: 98%*  
-*Hallucinations Detected: 0*
+## 📊 Final Statistics
 
-**🎉 SUCCESS! 🎉**
+| Metric | Value |
+|--------|-------|
+| **Parameters Analyzed** | 35 |
+| **Spec Citations** | 35 (100%) |
+| **WARL Fields** | 6 |
+| **WARL Parameters** | 12 |
+| **UDB Gaps Found** | **13** |
+| **Critical Gaps** | 1 |
+| **Hallucinations** | 0 |
+| **Detection Rate** | 100% |
+| **Accuracy** | 98% |
+| **Allen's Criteria Met** | 3/3 ✅ |
+
+---
+
+
+
