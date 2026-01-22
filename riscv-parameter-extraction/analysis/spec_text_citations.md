@@ -25,21 +25,42 @@ For each parameter, we provide:
 
 ### 1. SD (State Dirty) - Bit 31 (RV32) / Bit 63 (RV64)
 
-**Spec Text Citation:** "The SD bit is a read-only bit that summarizes whether either the FS, VS, or XS fields signal the presence of some dirty state that will require saving extended user context to memory. If FS, XS, and VS are all read-only zero, then SD is also always zero. SD=(FS==0b11 OR XS==0b11 OR VS==0b11)"
+**Spec Text Citation:**
+> "The SD bit is a read-only bit that summarizes whether either the FS, XS, or VS fields signal the presence of some dirty state that will require saving extended user context to memory. If FS, XS, and VS are all read-only zero, then SD is also always zero. SD=(FS==0b11 OR XS==0b11 OR VS==0b11)"
 
-**Spec Location:** Section 3.1.6, Paragraph 8
+**Spec Location:** Section 3.1.6, Paragraph 8 (Lines 37-41 in spec excerpt)  
+**Indicator Words:** ["summarizes", "dirty state"]  
+**Parameter Type:** Named, Config-Dependent  
+**Config Dependency:** F extension OR V extension
 
-**Indicator Words:** "summarizes", "dirty state", "saving extended user context"
-
-**Parameter Type:** Named
-
+**Bit Locations:**
+- **RV64:** Bit 63
+- **RV32:** Bit 31
 
 **UDB Status:**
 - **In UDB:** ✅ YES
 - **File:** spec/std/isa/csr/mstatus.yaml
-- **Lines:** 26-42
-- **Notes:** Fully documented with definedBy extension dependencies
+- **Lines:** 26-49
+- **definedBy:** anyOf: F OR V (lines 33-37)
 
+**Field Behavior:**
+- Read-only bit summarizing dirty state
+- SD = (FS==0b11 OR XS==0b11 OR VS==0b11)
+- If FS, XS, VS all read-only zero, then SD is always zero
+- Type: ROH (Read-Only with Hardware update) or RO depending on F/V implementation
+
+**LLM Detection:**
+- **Source:** Field definition in spec excerpt
+- **Method:** Identified explicit field name and extension dependency
+- **Reasoning:** Explicitly named field with clear F or V extension requirement
+- **Classification:** Named (has explicit name) + Config-Dependent (requires F or V extension)
+
+**Notes:**
+- Only meaningful when F extension or V extension is implemented
+- UDB correctly captures extension dependency via definedBy anyOf
+- Type varies: ROH if F or V implemented with dirty update, otherwise RO
+
+---
 
 ### 2. MSTATUS_RESERVED_47_43 - Bits 47-43 (RV64)
 
@@ -69,7 +90,7 @@ For each parameter, we provide:
 - Reads return unpredictable values
 - This is a spec documentation pattern - reserved bits shown in diagrams but not described in prose
 
-
+---
 ### 3. MDT (Machine Disable Trap) - Bit 42 (RV64) / mstatush:10 (RV32)
 
 **Spec Text Citation:**
@@ -106,6 +127,7 @@ For each parameter, we provide:
 - Exists in different bit positions for RV32 (mstatush) vs RV64
 - UDB correctly captures extension dependency via definedBy
 
+---
 
 ### 4. MPELP (Machine Previous Expected Landing Pad) - Bit 41 (RV64) / mstatush:9 (RV32)
 
