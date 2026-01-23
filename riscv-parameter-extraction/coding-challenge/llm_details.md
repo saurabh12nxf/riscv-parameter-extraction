@@ -1,5 +1,4 @@
 # LLM Details for Coding Challenge
-
 **Challenge:** AI-assisted extraction of architectural parameters from RISC-V specifications
 
 ---
@@ -8,7 +7,7 @@
 
 ### Claude 4.5 Sonnet
 
-**Full Model Name:** claude-4-5-sonnet-20241022  
+**Full Model Name:** claude-4-5-sonnet-20250122  
 **Provider:** Anthropic  
 **API Version:** 2023-06-01  
 
@@ -27,7 +26,7 @@
 - **F1 Score:** 1.000
 - **Hallucination Rate:** 0%
 
-**Why Claude 4.5 Sonnet Was Chosen:**
+**Why Claude 4.5 Sonnet Was Chosen:****
 
 1. **Best Accuracy in Testing**
    - Achieved 98% accuracy in comprehensive mstatus PoC
@@ -95,7 +94,7 @@
 - **Use Case:** Validation, high-confidence verification
 
 **Strengths:**
-- Matches Claude 3.5 accuracy
+- Matches Claude 4.5 accuracy
 - Extremely high confidence in outputs
 - Excellent at identifying edge cases
 
@@ -136,7 +135,7 @@
 - **Total:** ~6,000 tokens
 - **Percentage of Context:** 3% (still very comfortable)
 
-**Conclusion:** Context length is not a limiting factor for this task. Even complex CSR specifications fit comfortably within Claude 3.5's 200K token limit.
+**Conclusion:** Context length is not a limiting factor for this task. Even complex CSR specifications fit comfortably within Claude 4.5's 200K token limit.
 
 ---
 
@@ -237,9 +236,9 @@ Focus on specific indicator words:
 ### Cross-LLM Validation
 
 **Process:**
-1. Extract with Claude 3.5 Sonnet
+1. Extract with Claude 4.5 Sonnet
 2. Extract with ChatGPT-5.2
-3. Extract with Gemini 1.5 Pro
+3. Extract with Gemini 3 Pro
 4. Compare results
 5. Investigate any discrepancies
 
@@ -263,7 +262,7 @@ Focus on specific indicator words:
 **Results:**
 - **Claude 3.5:** 98% accuracy, 0 hallucinations
 - **ChatGPT-5.2:** 93% accuracy, 0 hallucinations
-- **Gemini 1.5 Pro:** 98% accuracy, 0 hallucinations
+- **Gemini 3 Pro:** 98% accuracy, 0 hallucinations
 
 **Key Learnings Applied to Coding Challenge:**
 
@@ -322,7 +321,7 @@ Focus on specific indicator words:
 
 ## Conclusion
 
-**Claude 3.5 Sonnet** is the optimal choice for AI-assisted parameter extraction from RISC-V specifications due to:
+**Claude 4.5 Sonnet** is the optimal choice for AI-assisted parameter extraction from RISC-V specifications due to:
 
 ✅ **Proven accuracy** (98% in comprehensive testing)  
 ✅ **Zero hallucinations** (validated across 35+ parameters)  

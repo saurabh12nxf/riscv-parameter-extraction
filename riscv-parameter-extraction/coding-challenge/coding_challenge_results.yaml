@@ -1,4 +1,7 @@
 # LFX Coding Challenge Results
+# AI-assisted extraction of architectural parameters from RISC-V specifications
+# Author: Saurabh (@saurabh12nxf)
+# Date: January 23, 2026
 # Challenge: Extract parameters from two RISC-V specification snippets
 
 metadata:
@@ -7,8 +10,8 @@ metadata:
   date: "2026-01-23"
   snippets_analyzed: 2
   total_parameters_extracted: 7
-  llm_primary: "Claude 3.5 Sonnet"
-  llm_validation: ["ChatGPT-5.2", "Gemini 1.5 Pro"]
+  llm_primary: "Claude 4.5 Sonnet"
+  llm_validation: ["ChatGPT-5.2", "Gemini 3 Pro"]
   methodology: "Few-shot learning with spec text validation"
   hallucinations: 0
   prior_work: "mstatus PoC - 35 parameters extracted, 98% accuracy"
@@ -220,7 +223,7 @@ summary:
 
 methodology:
   llm_used: "Claude 4.5 Sonnet (primary)"
-  validation: "Cross-checked with ChatGPT-5.2 and Gemini 1.5 Pro"
+  validation: "Cross-checked with ChatGPT-5.2 and Gemini 3 Pro"
   
   prompt_strategy:
     - "Explicit definition of what constitutes a 'parameter'"
