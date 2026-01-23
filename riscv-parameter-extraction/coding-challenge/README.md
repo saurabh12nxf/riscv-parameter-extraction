@@ -33,8 +33,8 @@ Extract architectural parameters from RISC-V specification snippets using AI/LLM
 
 ### 2. `llm_details.md`
 **Comprehensive LLM documentation:**
-- Primary: Claude 3.5 Sonnet (98% accuracy, 0 hallucinations)
-- Validation: ChatGPT-5.2, Gemini 1.5 Pro
+- Primary: Claude 4.5 Sonnet (98% accuracy, 0 hallucinations)
+- Validation: ChatGPT-5.2, Gemini 3 Pro
 - Context length, temperature settings, performance metrics
 - Why Claude 3.5 was chosen
 
